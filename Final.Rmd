@@ -1,9 +1,7 @@
 ---
 title: "Project"
 author: "Sidney da S. P. Bissoli"
-output:
-  html_document:
-    keep_md: true
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
