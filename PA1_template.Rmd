@@ -2,7 +2,7 @@
 title: "Project Assignment 1"
 author: "Sidney S. P. Bissoli"
 date: "23/01/2021"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
