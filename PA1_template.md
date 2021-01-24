@@ -1,28 +1,28 @@
----
-title: "Project Assignment 1"
-author: "Sidney S. P. Bisssoli"
-date: "23/01/2021"
-output: 
-  html_document: 
-    keep_md: yes
----
-
-
+Project Assignment 1
+================
+Sidney S. P. Bisssoli
+23/01/2021
 
 ## Data Presentation
 
-This assignment deals with data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of
-October and November, 2012 and include the number of steps taken in 5 minute intervals each day. The variables included in this dataset are:
-  
-1) **Steps**: number of steps taking in a 5-minute interval
-2) **Date**: the date on which the measurement was taken
-3) **Interval**: identifier for the 5-minute interval in which measurement was taken
+This assignment deals with data from a personal activity monitoring
+device. This device collects data at 5 minute intervals through out the
+day. The data consists of two months of data from an anonymous
+individual collected during the months of October and November, 2012 and
+include the number of steps taken in 5 minute intervals each day. The
+variables included in this dataset are:
+
+1.  **Steps**: number of steps taking in a 5-minute interval
+2.  **Date**: the date on which the measurement was taken
+3.  **Interval**: identifier for the 5-minute interval in which
+    measurement was taken
 
 ## Part I: loading and preprocessing the data
 
-First, we need to load and install (if necessary) the packages that we will need for this project.
+First, we need to load and install (if necessary) the packages that we
+will need for this project.
 
-```r
+``` r
 # packages' name
 packages <- c("dplyr", "ggplot2")
 
@@ -36,9 +36,9 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 ```
 
-Then, let's load the data:
+Then, let’s load the data:
 
-```r
+``` r
 # assign a webpage to an object
 URL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip" 
 
@@ -51,34 +51,36 @@ data <- read.table(unz("data.zip", "activity.csv"), sep = ",", header = TRUE)
 
 ## Part II: mean total number of steps taken per day
 
-Now, we are going to answer the following question: **what is the mean total number of steps taken per day?** To do that, first we are going to generate the total number of steps taken per day:
+Now, we are going to answer the following question: **what is the mean
+total number of steps taken per day?** To do that, first we are going to
+generate the total number of steps taken per day:
 
-```r
+``` r
 question1 <- data %>%
   group_by(date) %>%
   summarise(steps = sum(steps))
 question1
 ```
 
-```
-## # A tibble: 61 x 2
-##    date       steps
-##  * <chr>      <int>
-##  1 2012-10-01    NA
-##  2 2012-10-02   126
-##  3 2012-10-03 11352
-##  4 2012-10-04 12116
-##  5 2012-10-05 13294
-##  6 2012-10-06 15420
-##  7 2012-10-07 11015
-##  8 2012-10-08    NA
-##  9 2012-10-09 12811
-## 10 2012-10-10  9900
-## # ... with 51 more rows
-```
-Then, we are going to make a histogram of the total number of steps taken each day:
+    ## # A tibble: 61 x 2
+    ##    date       steps
+    ##  * <chr>      <int>
+    ##  1 2012-10-01    NA
+    ##  2 2012-10-02   126
+    ##  3 2012-10-03 11352
+    ##  4 2012-10-04 12116
+    ##  5 2012-10-05 13294
+    ##  6 2012-10-06 15420
+    ##  7 2012-10-07 11015
+    ##  8 2012-10-08    NA
+    ##  9 2012-10-09 12811
+    ## 10 2012-10-10  9900
+    ## # ... with 51 more rows
 
-```r
+Then, we are going to make a histogram of the total number of steps
+taken each day:
+
+``` r
 g <- ggplot(data = question1, mapping = aes(steps))
 g + 
   geom_density(color="darkblue", 
@@ -97,27 +99,28 @@ g +
         axis.text.y = element_blank())
 ```
 
-![](PA1_template_files/figure-html/hist total per day-1.png)<!-- -->
-  
-And finally, let's calculate and report the mean and median of the total number of steps taken per day:
+![](PA1_template_files/figure-gfm/hist%20total%20per%20day-1.png)<!-- -->
 
-```r
+And finally, let’s calculate and report the mean and median of the total
+number of steps taken per day:
+
+``` r
 rbind(c("Mean", "Median"), 
       c(round(mean(question1$steps, na.rm = TRUE), 2), 
         round(median(question1$steps, na.rm = TRUE), 2)))
 ```
 
-```
-##      [,1]       [,2]    
-## [1,] "Mean"     "Median"
-## [2,] "10766.19" "10765"
-```
+    ##      [,1]       [,2]    
+    ## [1,] "Mean"     "Median"
+    ## [2,] "10766.19" "10765"
 
 ## Part III: average daily activity pattern
 
-The question now is: **What is the average daily activity pattern?** Let's plot a time series of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis):
+The question now is: **What is the average daily activity pattern?**
+Let’s plot a time series of the 5-minute interval (x-axis) and the
+average number of steps taken, averaged across all days (y-axis):
 
-```r
+``` r
 ## mean steps by interval in all days
 question2 <- data %>% 
   group_by(interval) %>%
@@ -136,47 +139,51 @@ g +
         axis.text = element_text(size = 8))
 ```
 
-![](PA1_template_files/figure-html/average steps by intervals-1.png)<!-- -->
+![](PA1_template_files/figure-gfm/average%20steps%20by%20intervals-1.png)<!-- -->
 
-Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+Which 5-minute interval, on average across all the days in the dataset,
+contains the maximum number of steps?
 
-```r
+``` r
 as.vector(t(question2[which.max(question2$mean),1]))
 ```
 
-```
-## [1] 835
-```
+    ## [1] 835
 
 ## Part IV: imputing missing values
 
-Let's calculate the total number of rows with missing values in the dataset:
+Let’s calculate the total number of rows with missing values in the
+dataset:
 
-```r
+``` r
 sum(apply(data, 1, anyNA))
 ```
 
-```
-## [1] 2304
-```
+    ## [1] 2304
 
-Now, we will fill NAs, and the strategy applied will be the substitution of NAs by the mean for that 5-minute interval across all days:
+Now, we will fill NAs, and the strategy applied will be the substitution
+of NAs by the mean for that 5-minute interval across all days:
 
-```r
+``` r
 question3 <- data %>%
   group_by(interval) %>%
   mutate(steps = ifelse(is.na(steps), mean(steps, na.rm = TRUE), steps))
 ```
-A new dataset with imputation was created (called question3). In this new dataset, first we are going to make a histogram of the total number of steps taken each day. To do that, we need to calculate the total number of steps taken per day
 
-```r
+A new dataset with imputation was created (called question3). In this
+new dataset, first we are going to make a histogram of the total number
+of steps taken each day. To do that, we need to calculate the total
+number of steps taken per day
+
+``` r
 total <- question3 %>%
   group_by(date) %>%
   summarise(steps = sum(steps))
 ```
+
 And now, the histogram:
 
-```r
+``` r
 g <- ggplot(data = total, mapping = aes(steps))
 g + 
   geom_density(color="darkblue", 
@@ -195,28 +202,37 @@ g +
         axis.text.y = element_blank())
 ```
 
-![](PA1_template_files/figure-html/new hist total per day-1.png)<!-- -->
-  
-Again, let's generate the mean and median total number of steps taken per day in thiw new dataset:
+![](PA1_template_files/figure-gfm/new%20hist%20total%20per%20day-1.png)<!-- -->
 
-```r
+Again, let’s generate the mean and median total number of steps taken
+per day in thiw new dataset:
+
+``` r
 rbind(c("Mean", "Median"), 
       c(round(mean(total$steps), 2), 
         round(median(total$steps), 2)))
 ```
 
-```
-##      [,1]       [,2]      
-## [1,] "Mean"     "Median"  
-## [2,] "10766.19" "10766.19"
-```
-**Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?** With the strategy that was applied in this project, there is a slight change in the median (from 10765 to 10766.19), but not in the mean (using this strategy, with or without imputation, the mean is equal to 10766.19).
+    ##      [,1]       [,2]      
+    ## [1,] "Mean"     "Median"  
+    ## [2,] "10766.19" "10766.19"
+
+**Do these values differ from the estimates from the first part of the
+assignment? What is the impact of imputing missing data on the estimates
+of the total daily number of steps?** With the strategy that was applied
+in this project, there is a slight change in the median (from 10765 to
+10766.19), but not in the mean (using this strategy, with or without
+imputation, the mean is equal to 10766.19).
 
 ## Part V: differences in activity patterns between weekdays and weekends
 
-Now, we are going to answer the following question: **Are there differences in activity patterns between weekdays and weekends?** Using the new dataset with imputation, we will create a new factor variable, with two levels – “weekday” and “weekend”, indicating whether a given date is a weekday or weekend day
+Now, we are going to answer the following question: **Are there
+differences in activity patterns between weekdays and weekends?** Using
+the new dataset with imputation, we will create a new factor variable,
+with two levels – “weekday” and “weekend”, indicating whether a given
+date is a weekday or weekend day
 
-```r
+``` r
 question3$category <- question3$date
 question3$category <- as.Date(question3$category)
 question3$category <- weekdays(question3$category)
@@ -225,9 +241,12 @@ question3$category <- ifelse(question3$category=="sábado" |
                              "weekday")
 question3$category <- as.factor(question3$category)
 ```
-Then, we are going to make a panel plot containing a time series plot of the 5-minute interval and the average number of steps taken, averaged across all weekday days or weekend days.
 
-```r
+Then, we are going to make a panel plot containing a time series plot of
+the 5-minute interval and the average number of steps taken, averaged
+across all weekday days or weekend days.
+
+``` r
 # mean steps by interval if weekday or weekend
 question4 <- question3 %>%
   group_by(interval, category) %>%
@@ -245,6 +264,4 @@ g +
         legend.title = element_blank())
 ```
 
-![](PA1_template_files/figure-html/steps by intervals in weekday/weekend-1.png)<!-- -->
-
-
+![](PA1_template_files/figure-gfm/steps%20by%20intervals%20in%20weekday/weekend-1.png)<!-- -->
