@@ -2,7 +2,9 @@
 title: "Informative Title"
 author: "Sidney S. P. Bisssoli"
 date: "23/01/2021"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
